@@ -1,0 +1,46 @@
+package framework;
+
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+
+import java.util.concurrent.TimeUnit;
+
+/**
+ * Created by User on 16.08.2016.
+ */
+public class SeleniumTestCase extends WebDriverCommands
+{
+    public static String fileName = "";
+    Cookie cookie = new Cookie("mobileDevice", "true");
+    Cookie cookie2 = new Cookie("discountTourBanner", "true");
+
+    @BeforeMethod
+    public void setUp(){
+
+        FirefoxProfile profile = new FirefoxProfile();
+        driver = new FirefoxDriver(profile);
+//        driver = new ChromeDriver();
+//        driver = new InternetExplorerDriver();
+//        driver = new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_11);
+        driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);
+//        driver.manage().window().setSize(new Dimension(1100, 1100));
+        driver.manage().window().maximize();
+        //driver.get("https://mda2.invia.ru:1003/login/login/?referer=%2F");
+        //driver.get("http://inventory.travellata.ru/demo/references");
+
+        driver.manage().addCookie(cookie);
+        driver.manage().addCookie(cookie2);
+        driver.navigate().refresh();
+
+    }
+
+
+    @AfterMethod
+    public void tearDown() {
+        driver.manage().deleteCookie(cookie);
+        driver.quit();
+    }
+}
