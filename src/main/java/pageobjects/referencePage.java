@@ -16,39 +16,39 @@ public class referencePage extends WebDriverCommands
 
     protected static String session;
 
-    protected static String inventory;
+/*    protected static String inventory;
     protected static String inventory2;
     protected static String inventory4;
     protected static String inventory8;
     protected static String inventory10;
-    protected static String inventory11;
+    protected static String inventory11;*/
 
 
-    public sendAsyncSearchRequestPage selectAsyncSearchLink() throws Exception
+    public sendAsyncSearchRequestPage selectAsyncSearchLink(String inventory) throws Exception
     {
         By byAsyncSearchLink = By.xpath(ASYNC_SEARCH_LINK);
         waitForElementDisplayed(byAsyncSearchLink, CONSTANT_3_SECONDS);
         click(byAsyncSearchLink);
 
-        return new sendAsyncSearchRequestPage();
+        return new sendAsyncSearchRequestPage(inventory);
     }
 
-    public checkAsyncSearchStatusPage selectAsyncSearchStatusLink() throws Exception
+    public checkAsyncSearchStatusPage selectAsyncSearchStatusLink(String inventory) throws Exception
     {
         By byAsyncSearchLink = By.xpath(ASYNC_SEARCH_STATUS_LINK);
         waitForElementDisplayed(byAsyncSearchLink, CONSTANT_3_SECONDS);
         click(byAsyncSearchLink);
 
-        return new checkAsyncSearchStatusPage();
+        return new checkAsyncSearchStatusPage(inventory);
     }
 
-    public searchPage selectDefaultSearchLink() throws Exception
+    public searchPage selectDefaultSearchLink(String inventory) throws Exception
     {
         By byAsyncSearchLink = By.xpath(DEFAULT_SEARCH_LINK);
         waitForElementDisplayed(byAsyncSearchLink, CONSTANT_3_SECONDS);
         click(byAsyncSearchLink);
 
-        return new searchPage();
+        return new searchPage(inventory);
     }
 
 

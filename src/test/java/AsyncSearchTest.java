@@ -23,13 +23,13 @@ public class AsyncSearchTest extends SeleniumTestCase
             referencePage referencePage = new referencePage();
 
 
-            referencePage.selectAsyncSearchLink();
+            referencePage.selectAsyncSearchLink(temp);
             switchToNewTab(0);
 
-            referencePage.selectAsyncSearchStatusLink();
+            referencePage.selectAsyncSearchStatusLink(temp);
             switchToNewTab(0);
 
-            referencePage.selectDefaultSearchLink();
+            referencePage.selectDefaultSearchLink(temp);
             switchToNewTab(0);
         }
 

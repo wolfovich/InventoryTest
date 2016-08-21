@@ -11,7 +11,7 @@ public class checkAsyncSearchStatusPage extends WebDriverCommands
 {
     private final String ASYNC_SEARCH_STATUS = "//pre";
 
-    public checkAsyncSearchStatusPage() throws Exception
+    public checkAsyncSearchStatusPage(String inventory) throws Exception
     {
         switchToNewTab(1);
 
@@ -19,12 +19,12 @@ public class checkAsyncSearchStatusPage extends WebDriverCommands
         waitForElementDisplayed(byAsyncSearchStatus, CONSTANT_3_SECONDS);
 
         String s = findElement(byAsyncSearchStatus).getText().toLowerCase();
-        String status = s.substring(s.indexOf("success") + 9, s.indexOf("result") - 2);
+        String status = s.replaceFirst(".*?success\":", "").replaceFirst(",.*", "");
 
-        Assert.assertTrue(status.equals("true"), "success false");
+        Assert.assertTrue(status.equals("true"), "async search status is false, source: " + inventory.replaceFirst(".*\\/\\/", "").replaceFirst("\\..*", ""));
 
         String currentURL = driver.getCurrentUrl();
-        String defaultSession = currentURL.substring(currentURL.indexOf("session") + 8, currentURL.indexOf("&_"));
+        String defaultSession = currentURL.replaceFirst(".*session=", "").replaceFirst("&_.*", "");
 
         currentURL = currentURL.replace(defaultSession, referencePage.session);
 
@@ -45,7 +45,7 @@ public class checkAsyncSearchStatusPage extends WebDriverCommands
                 break;
             }
         }
-        Assert.assertTrue(jobsCount.equals(jobsSuccess), "jobs count not equal jobs success");
+        Assert.assertTrue(jobsCount.equals(jobsSuccess), "jobs count not equal jobs success, source: " + inventory.replaceFirst(".*\\/\\/", "").replaceFirst("\\..*", ""));
         /*try
         {
             Assert.assertTrue(jobsCount.equals(jobsSuccess), "jobsCount not equal jobsSuccess");
