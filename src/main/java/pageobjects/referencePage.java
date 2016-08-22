@@ -16,14 +16,6 @@ public class referencePage extends WebDriverCommands
 
     protected static String session;
 
-/*    protected static String inventory;
-    protected static String inventory2;
-    protected static String inventory4;
-    protected static String inventory8;
-    protected static String inventory10;
-    protected static String inventory11;*/
-
-
     public sendAsyncSearchRequestPage selectAsyncSearchLink(String inventory) throws Exception
     {
         By byAsyncSearchLink = By.xpath(ASYNC_SEARCH_LINK);
