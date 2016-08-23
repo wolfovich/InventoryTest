@@ -1,6 +1,8 @@
 package pageobjects;
 
 import framework.WebDriverCommands;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.openqa.selenium.By;
 import org.testng.Assert;
 
@@ -39,6 +41,19 @@ public class checkAsyncSearchStatusPage extends WebDriverCommands
         waitForElementDisplayed(byAsyncSearchStatus, CONSTANT_3_SECONDS);
 
         response = findElement(byAsyncSearchStatus).getText().toLowerCase();
+
+////////////////////////////////////////////////////
+
+        String json = response.replaceFirst(".*\\(", "").replaceFirst("\\);", "");
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(json);
+
+        JSONObject jsonObj = (JSONObject) obj;
+
+        String success = jsonObj.get("success").toString();
+        String result = jsonObj.get("session").toString();
+
+/////////////////////////////////////////////////////////
 
         matcher = statusPattern.matcher(response.replaceFirst(statusRegExp, ""));
         if (matcher.find())
