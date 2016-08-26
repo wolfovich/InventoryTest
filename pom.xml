@@ -41,12 +41,6 @@
             <version>1.7.7</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.jszip.redist</groupId>
-            <artifactId>jquery</artifactId>
-            <version>1.8.3</version>
-            <type>jszip</type>
-        </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
