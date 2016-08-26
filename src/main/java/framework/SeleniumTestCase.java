@@ -1,6 +1,7 @@
 package framework;
 
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.testng.annotations.AfterMethod;
@@ -21,8 +22,10 @@ public class SeleniumTestCase extends WebDriverCommands
     public void setUp(){
 
         FirefoxProfile profile = new FirefoxProfile();
-        driver = new FirefoxDriver(profile);
-//        driver = new ChromeDriver();
+       // driver = new FirefoxDriver(profile);
+        System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver/chromedriver.exe");
+        driver = new ChromeDriver();
+
 //        driver = new InternetExplorerDriver();
 //        driver = new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_11);
         driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);
