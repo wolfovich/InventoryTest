@@ -22,9 +22,9 @@ public class SeleniumTestCase extends WebDriverCommands
     public void setUp(){
 
         FirefoxProfile profile = new FirefoxProfile();
-       // driver = new FirefoxDriver(profile);
-        System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
-        driver = new ChromeDriver();
+        driver = new FirefoxDriver(profile);
+       // System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
+       // driver = new ChromeDriver();
 
 //        driver = new InternetExplorerDriver();
 //        driver = new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_11);
