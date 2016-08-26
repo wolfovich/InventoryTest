@@ -1,7 +1,10 @@
 package pageobjects;
 
 import framework.WebDriverCommands;
+import org.testng.Assert;
 import org.openqa.selenium.By;
+
+import java.util.regex.Matcher;
 
 /**
  * Created by User on 16.08.2016.
@@ -20,6 +23,7 @@ public class referencePage extends WebDriverCommands
     {
         By byAsyncSearchLink = By.xpath(ASYNC_SEARCH_LINK);
         waitForElementDisplayed(byAsyncSearchLink, CONSTANT_3_SECONDS);
+
         click(byAsyncSearchLink);
 
         return new sendAsyncSearchRequestPage(inventory);
@@ -29,6 +33,7 @@ public class referencePage extends WebDriverCommands
     {
         By byAsyncSearchLink = By.xpath(ASYNC_SEARCH_STATUS_LINK);
         waitForElementDisplayed(byAsyncSearchLink, CONSTANT_3_SECONDS);
+
         click(byAsyncSearchLink);
 
         return new checkAsyncSearchStatusPage(inventory);
@@ -38,6 +43,7 @@ public class referencePage extends WebDriverCommands
     {
         By byAsyncSearchLink = By.xpath(DEFAULT_SEARCH_LINK);
         waitForElementDisplayed(byAsyncSearchLink, CONSTANT_3_SECONDS);
+
         click(byAsyncSearchLink);
 
         return new searchPage(inventory);

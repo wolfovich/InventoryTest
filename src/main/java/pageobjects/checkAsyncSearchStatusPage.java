@@ -1,8 +1,10 @@
 package pageobjects;
 
 import framework.WebDriverCommands;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.testng.Assert;
 
@@ -19,51 +21,50 @@ public class checkAsyncSearchStatusPage extends WebDriverCommands
     {
         switchToNewTab(1);
 
-        Pattern statusPattern = Pattern.compile("\\w*");
-        Pattern defaultSessionPattern = Pattern.compile("\\w*");
-        Pattern errorSourcePattern = Pattern.compile("inventory\\w*");
+        int iterationCount = 60;
+
         Matcher matcher;
 
-        String statusRegExp = ".*?success\":";
+        Pattern defaultSessionPattern = Pattern.compile("\\w*");
         String sessionRegExp = ".*session=";
-        String jobsCountRegExp = ".*?jobscount\":\"";
-        String jobsSuccessRegExp = ".*?jobssuccess\":\"";
+
+        JSONParser parser = new JSONParser();
+        Object jsonParse = new Object();
+        JSONObject jsonObjects;
+        JSONObject jsonResultObject;
 
         String response;
-        String status = "";
         String jobsCount = "";
         String jobsSuccess = "";
         String currentURL = driver.getCurrentUrl();
         String newURL;
         String defaultSession = "";
+        String json;
+        String success;
 
         By byAsyncSearchStatus = By.xpath(ASYNC_SEARCH_STATUS);
         waitForElementDisplayed(byAsyncSearchStatus, CONSTANT_3_SECONDS);
 
         response = findElement(byAsyncSearchStatus).getText().toLowerCase();
 
-////////////////////////////////////////////////////
+        json = fromJsonpToJsonParse(response);
 
-        String json = response.replaceFirst(".*\\(", "").replaceFirst("\\);", "");
-        JSONParser parser = new JSONParser();
-        Object obj = parser.parse(json);
-
-        JSONObject jsonObj = (JSONObject) obj;
-
-        String success = jsonObj.get("success").toString();
-        String result = jsonObj.get("session").toString();
-
-/////////////////////////////////////////////////////////
-
-        matcher = statusPattern.matcher(response.replaceFirst(statusRegExp, ""));
-        if (matcher.find())
+        try
         {
-            status = matcher.group(0);
+            jsonParse = parser.parse(json);
+        }
+        catch(ParseException e)
+        {
+            System.out.println("Something wrong with json response");
         }
 
-        matcher = errorSourcePattern.matcher(inventory);
-        matcher.find();
-        Assert.assertTrue(status.equals("true"), "async search status is false, source: " + matcher.group(0));
+        jsonObjects = (JSONObject) jsonParse;
+
+
+        success = jsonObjects.get("success").toString();
+
+        Assert.assertTrue(success.equals("true"), "async search status is false, source: " + inventoryErrorSource(inventory));
+
 
         matcher = defaultSessionPattern.matcher(currentURL.replaceFirst(sessionRegExp, ""));
         if (matcher.find())
@@ -73,7 +74,7 @@ public class checkAsyncSearchStatusPage extends WebDriverCommands
 
         newURL = currentURL.replace(defaultSession, referencePage.session);
 
-        for(int jobSuccessIterator = 0; jobSuccessIterator != 15; jobSuccessIterator++)
+        for(int jobSuccessIterator = 0; jobSuccessIterator != iterationCount; jobSuccessIterator++)
         {
             driver.get(newURL);
 
@@ -82,9 +83,21 @@ public class checkAsyncSearchStatusPage extends WebDriverCommands
             response = findElement(byAsyncSearchStatus).getText().toLowerCase();
             waitForElementDisplayed(byAsyncSearchStatus, CONSTANT_3_SECONDS);
 
-            jobsCount = response.replaceFirst(jobsCountRegExp, "").replaceFirst("\\W.*", "");
-            jobsSuccess = response.replaceFirst(jobsSuccessRegExp, "").replaceFirst("\\W.*", "");
+            json = fromJsonpToJsonParse(response);
+            try
+            {
+                jsonParse = parser.parse(json);
+            }
+            catch(ParseException e)
+            {
+                System.out.println("Something wrong with json response");
+            }
 
+            jsonObjects = (JSONObject) jsonParse;
+            jsonResultObject = (JSONObject) jsonObjects.get("result");
+
+            jobsCount = jsonResultObject.get("jobscount").toString();
+            jobsSuccess = jsonResultObject.get("jobssuccess").toString();
 
             if(jobsCount.equals(jobsSuccess) )
             {
@@ -92,21 +105,7 @@ public class checkAsyncSearchStatusPage extends WebDriverCommands
             }
         }
 
-        matcher = errorSourcePattern.matcher(inventory);
-        matcher.find();
-        Assert.assertTrue(jobsCount.equals(jobsSuccess), "jobs count not equal jobs success, source: " + matcher.group(0));
-
-
-        /*try
-        {
-            Assert.assertTrue(jobsCount.equals(jobsSuccess), "jobsCount not equal jobsSuccess");
-
-        }
-        catch (AssertionError ae)
-        {
-            String message = ae.getMessage();
-            System.out.print(message);
-        }*/
+        Assert.assertTrue(jobsCount.equals(jobsSuccess), "jobs count is not equal to jobs success, source: " + inventoryErrorSource(inventory));
 
 
         driver.close();

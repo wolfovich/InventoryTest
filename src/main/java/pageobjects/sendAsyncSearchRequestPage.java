@@ -2,6 +2,7 @@ package pageobjects;
 
 import framework.WebDriverCommands;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.testng.Assert;
 
@@ -21,51 +22,44 @@ public class sendAsyncSearchRequestPage extends WebDriverCommands
     {
         switchToNewTab(1);
 
-        Pattern statusPattern = Pattern.compile("\\w*");
-        Pattern sessionPattern = Pattern.compile("\\w*");
-        Pattern errorSourcePattern = Pattern.compile("\\w*");
+        JSONParser parser = new JSONParser();
 
-        Matcher matcher;
+        Object jsonParse = new Object();
+        JSONObject jsonObjects;
+        JSONObject jsonResultObject;
 
-        String statusRegExp = ".*?success\":";
-        String sessionRegExp = ".*session\":\"";
         String response;
-        String status = "";
+        String json;
+        String success;
+        String session;
 
         By byAsyncSearchStatus = By.xpath(ASYNC_SEARCH_STATUS);
         waitForElementDisplayed(byAsyncSearchStatus, CONSTANT_3_SECONDS);
 
         response = findElement(byAsyncSearchStatus).getText().toLowerCase();
 
-///////////////////////////////////
 
-        String json = response.replaceFirst(".*\\(", "").replaceFirst("\\);", "");
-        JSONParser parser = new JSONParser();
-        Object obj = parser.parse(json);
+        json = fromJsonpToJsonParse(response);
 
-        JSONObject jsonObj = (JSONObject) obj;
-
-        String success = jsonObj.get("success").toString();
-        String result = jsonObj.get("session").toString();
-
-///////////////////////////////////////
-
-
-        matcher = statusPattern.matcher(response.replaceFirst(statusRegExp, ""));
-        if (matcher.find())
+        try
         {
-            status = matcher.group(0);
+            jsonParse = parser.parse(json);
+        }
+        catch(ParseException e)
+        {
+            System.out.println("Something wrong with json response");
         }
 
-        matcher = sessionPattern.matcher(response.replaceFirst(sessionRegExp, ""));
-        if (matcher.find())
-        {
-            referencePage.session = matcher.group(0);
-        }
+        jsonObjects = (JSONObject) jsonParse;
+        jsonResultObject =(JSONObject) jsonObjects.get("result");
 
-        matcher = errorSourcePattern.matcher(inventory);
-        matcher.find();
-        Assert.assertTrue(status.equals("true"), "sending async search request is false, source: " + matcher.group(0));
+
+        success = jsonObjects.get("success").toString();
+        session = jsonResultObject.get("session").toString();
+
+        referencePage.session = session;
+
+        Assert.assertTrue(success.equals("true"), "sending async search request is false, source: " + inventoryErrorSource(inventory));
 
         driver.close();
     }

@@ -1,14 +1,24 @@
 package framework;
 
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
+import java.io.Console;
+import java.security.PublicKey;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeoutException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by User on 16.08.2016.
  */
@@ -17,6 +27,23 @@ public class WebDriverCommands
     public final int CONSTANT_3_SECONDS = 3;
     public static WebDriver driver;
 
+
+    public String fromJsonpToJsonParse(String JsonpResponse)
+    {
+        String json = JsonpResponse.replaceFirst(".*?\\(", "").replaceFirst("\\);", "");
+
+        return json;
+    }
+
+    public String inventoryErrorSource(String inventoryUrl)
+    {
+        Matcher matcher;
+        Pattern errorSourcePattern = Pattern.compile("inventory\\w*");
+        matcher = errorSourcePattern.matcher(inventoryUrl);
+        matcher.find();
+
+        return matcher.group(0);
+    }
 
     public String getKeyFromValue(Map hm, Object value)
     {
@@ -177,9 +204,16 @@ public class WebDriverCommands
      */
     public void waitForElementDisplayed(final By by, int timeOut)
     {
-        (new WebDriverWait(driver, timeOut))
-                .until(ExpectedConditions
-                        .visibilityOfElementLocated(by));
+        try
+        {
+            (new WebDriverWait(driver, timeOut)).until(ExpectedConditions.visibilityOfElementLocated(by));
+        }
+        catch (org.openqa.selenium.TimeoutException timeout)
+        {
+            String currenyUrl = driver.getCurrentUrl();
+            System.out.println("Error source: " + currenyUrl);
+        }
+
     }
 
 

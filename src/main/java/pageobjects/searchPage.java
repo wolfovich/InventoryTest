@@ -1,6 +1,9 @@
 package pageobjects;
 
 import framework.WebDriverCommands;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.testng.Assert;
 import java.util.regex.*;
@@ -16,41 +19,43 @@ public class searchPage extends WebDriverCommands
     {
         switchToNewTab(1);
 
-        Pattern toursQuantityPattern = Pattern.compile("\\d*$");
-        Pattern statusPattern = Pattern.compile("\\w*");
-        Pattern errorSourcePattern = Pattern.compile("inventory\\w*");
-        Matcher matcher;
+        JSONParser parser = new JSONParser();
 
-        String statusRegExp = ".*?success\":";
-        String toursQuantityRegExp = ",\"operators.*";
+        Object jsonParse = new Object();
+        JSONObject jsonObjects;
+        JSONObject jsonResultObject;
+
         String response;
-        String status = "";
-        String toursQuantity = "";
+        String toursQuantity;
+        String json;
+        String success;
+
 
         By byDefaultSearchResult = By.xpath(DEFAULT_SEARCH_RESULT);
         waitForElementDisplayed(byDefaultSearchResult, CONSTANT_3_SECONDS);
 
         response = findElement(byDefaultSearchResult).getText().toLowerCase();
 
-        matcher = statusPattern.matcher(response.replaceFirst(statusRegExp, ""));
-        if (matcher.find())
+        json = fromJsonpToJsonParse(response);
+
+        try
         {
-            status = matcher.group(0);
+            jsonParse = parser.parse(json);
+        }
+        catch(ParseException e)
+        {
+            System.out.println("Something wrong with json response");
         }
 
-        matcher = errorSourcePattern.matcher(inventory);
-        matcher.find();
-        Assert.assertTrue(status.equals("true"), "default search is false, source: " + matcher.group(0));
+        jsonObjects = (JSONObject) jsonParse;
+        jsonResultObject =(JSONObject) jsonObjects.get("result");
 
-        matcher = toursQuantityPattern.matcher(response.replaceFirst(toursQuantityRegExp, ""));
-        if(matcher.find())
-        {
-            toursQuantity = matcher.group(0);
-        }
+        success = jsonObjects.get("success").toString();
+        toursQuantity = jsonResultObject.get("toursquantity").toString();
 
-        matcher = errorSourcePattern.matcher(inventory);
-        matcher.find();
-        Assert.assertTrue(Integer.parseInt(toursQuantity) > 0, "Tours quantity is no > 0, source: " + matcher.group(0));
+        Assert.assertTrue(success.equals("true"), "default search is false, source: " + inventoryErrorSource(inventory));
+
+        Assert.assertTrue(Integer.parseInt(toursQuantity) > 0, "Tours quantity is no > 0, source: " + inventoryErrorSource(inventory));
 
 
         driver.close();
