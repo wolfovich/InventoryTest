@@ -13,10 +13,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class SeleniumTestCase extends WebDriverCommands
 {
-    public static String fileName = "";
+    /*public static String fileName = "";
     Cookie cookie = new Cookie("mobileDevice", "true");
     Cookie cookie2 = new Cookie("discountTourBanner", "true");
-
+*/
     @BeforeMethod
     public void setUp(){
 
@@ -31,16 +31,16 @@ public class SeleniumTestCase extends WebDriverCommands
         //driver.get("https://mda2.invia.ru:1003/login/login/?referer=%2F");
         //driver.get("http://inventory.travellata.ru/demo/references");
 
-        driver.manage().addCookie(cookie);
+       /* driver.manage().addCookie(cookie);
         driver.manage().addCookie(cookie2);
-        driver.navigate().refresh();
+        driver.navigate().refresh();*/
 
     }
 
 
     @AfterMethod
     public void tearDown() {
-        driver.manage().deleteCookie(cookie);
+        //driver.manage().deleteCookie(cookie);
         driver.quit();
     }
 }
