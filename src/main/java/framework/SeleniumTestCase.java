@@ -25,10 +25,11 @@ public class SeleniumTestCase extends WebDriverCommands
 
         FirefoxBinary binary = new FirefoxBinary(new File("/usr/bin/firefox"));
         binary.setEnvironmentProperty("DISPLAY",System.getProperty("lmportal.xvfb.id", ":99"));
-        driver = new FirefoxDriver(binary,null);
+        FirefoxProfile profile = new FirefoxProfile();
+        driver = new FirefoxDriver(binary, profile);
  //       driver = new FirefoxDriver();
 
-     //   FirefoxProfile profile = new FirefoxProfile();
+
    //     driver = new FirefoxDriver(profile);
        // System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
        // driver = new ChromeDriver();
