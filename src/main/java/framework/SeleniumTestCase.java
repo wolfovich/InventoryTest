@@ -27,13 +27,13 @@ public class SeleniumTestCase extends WebDriverCommands
         binary.setEnvironmentProperty("DISPLAY",System.getProperty("lmportal.xvfb.id", ":99"));
         FirefoxProfile profile = new FirefoxProfile();
         driver = new FirefoxDriver(binary, profile);
- //       driver = new FirefoxDriver();
 
 
-   //     driver = new FirefoxDriver(profile);
-       // System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
-       // driver = new ChromeDriver();
-        //System.setProperty("webdriver.firefox.bin", "xvfb-run --auto-servernum --server-num=0    /usr/bin/firefox");
+
+//     driver = new FirefoxDriver(profile);
+// System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
+// driver = new ChromeDriver();
+//System.setProperty("webdriver.firefox.bin", "xvfb-run --auto-servernum --server-num=0    /usr/bin/firefox");
 //        driver = new InternetExplorerDriver();
 //        driver = new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_11);
         driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);
