@@ -4,9 +4,11 @@ import org.openqa.selenium.Cookie;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.firefox.FirefoxBinary;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,11 +23,16 @@ public class SeleniumTestCase extends WebDriverCommands
     @BeforeMethod
     public void setUp(){
 
-        FirefoxProfile profile = new FirefoxProfile();
-        driver = new FirefoxDriver(profile);
+        FirefoxBinary binary = new FirefoxBinary(new File("/usr/bin/firefox"));
+        binary.setEnvironmentProperty("DISPLAY",System.getProperty("lmportal.xvfb.id",":99"));
+        driver = new FirefoxDriver(binary,null);
+ //       driver = new FirefoxDriver();
+
+     //   FirefoxProfile profile = new FirefoxProfile();
+   //     driver = new FirefoxDriver(profile);
        // System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
        // driver = new ChromeDriver();
-        System.setProperty("webdriver.firefox.bin", "xvfb-run --auto-servernum --server-num=0    /usr/bin/firefox");
+        //System.setProperty("webdriver.firefox.bin", "xvfb-run --auto-servernum --server-num=0    /usr/bin/firefox");
 //        driver = new InternetExplorerDriver();
 //        driver = new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_11);
         driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);
