@@ -25,7 +25,7 @@ public class SeleniumTestCase extends WebDriverCommands
         driver = new FirefoxDriver(profile);
        // System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
        // driver = new ChromeDriver();
-        System.setProperty("webdriver.firefox.bin", "DISPLAY=:0.0 /usr/bin/firefox");
+        System.setProperty("webdriver.firefox.bin", "xvfb-run --auto-servernum --server-num=0    /usr/bin/firefox");
 //        driver = new InternetExplorerDriver();
 //        driver = new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_11);
         driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);
